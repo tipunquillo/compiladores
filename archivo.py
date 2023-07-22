@@ -12,7 +12,7 @@ def contar_lineas_palabras(archivo):
         return num_lineas + 1, num_palabras
 
 if __name__ == "__main__":
-    nombre_archivo = "D:/Users/tipunquillo/uSIS/Trabajos/Compiladores/compilador/practica2/archivo.txt"  # Reemplaza "archivo.txt" por el nombre de tu archivo
+    nombre_archivo = "D:/Users/tipunquillo/uSIS/Trabajos/Compiladores/compilador/practica2/archivo.txt"
 
     lineas, palabras = contar_lineas_palabras(nombre_archivo)
 
