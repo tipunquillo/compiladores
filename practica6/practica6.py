@@ -1,3 +1,12 @@
+'''
+Integrantes
+Carlos Mayorga
+Richard Hernández
+Esdras Salazar
+Kimberly García
+Julio Mejía
+'''
+
 import re
 
 # Funcion para tener la lista de tokens

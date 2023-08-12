@@ -1,3 +1,12 @@
+'''
+Integrantes
+Carlos Mayorga
+Richard Hernández
+Esdras Salazar
+Kimberly García
+Julio Mejía
+'''
+
 # -*- coding: utf-8 -*-
 
 import re 
