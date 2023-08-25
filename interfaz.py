@@ -6,6 +6,7 @@
 # importamos lo que vimos que nos puede servir
 import tkinter as tk
 from tkinter import scrolledtext, messagebox, filedialog
+from analizador import analizadorLexico # aqui importamos la clase desde analizador_lexico.py
 
 # variables globales
 archivo_cargado = ""
@@ -23,12 +24,11 @@ def cargar_archivo():
             entrada_texto.insert("1.0", contenido)
 
 # para lo del analisis (al rato)
-def analizar():
+def analizar_global():
     entrada = entrada_texto.get("1.0", "end-1c")  # para tener el texto de la entrada
-    # aqui agregan lo de la lógica del analizador
-    # para mientras
-    salida_textoo.delete("1.0", "end")
-    salida_texto.insert("1.0", entrada)
+    interfaz.analizar_interfaz() # llamando al método de la clase Interfaz
+    #mostrar_resultados(tokens, caracteres_invalidos)
+    # mostrar_resultados(tokens)
 
 # pendiente lo de ver como exportarlo
 def exportar():
@@ -38,6 +38,25 @@ def exportar():
         with open(archivo, "w") as f:
             f.write(salida)
             messagebox.showinfo("Exportar", "Bien exportado")
+
+# aqui usamos una clase mejor para dividir la parte del analizador
+class Interfaz:
+    def __init__(self, root):
+        self.root = root
+        self.analizador = analizadorLexico()
+
+    def analizar_interfaz(self):
+        contenido = entrada_texto.get("1.0", "end-1c")
+        tokens, caracteres_invalidos = self.analizador.analizar(contenido)
+        self.mostrar_resultados(tokens, caracteres_invalidos)  # Llamar al método dentro de la clase
+
+    def mostrar_resultados(self, tokens, caracteres_invalidos):  # Define el método dentro de la clase
+        salida_texto.delete("1.0", "end")
+        for token in tokens:
+            tipo, valor = token
+            salida_texto.insert("end", f"{tipo.ljust(25)}{valor}\n")
+        for char in caracteres_invalidos:
+            salida_texto.insert("end", f"CARACTER_INVALIDO".ljust(25) + char + "\n")
 
 # aqui armamos las funcionalidades
 def limpiar_entrada():
@@ -94,7 +113,7 @@ boton_cargar.pack(fill=tk.X, pady=5)
 boton_cargar.bind("<Enter>", enter)  # para que cargue los efectos aqui y el de abajo xd
 boton_cargar.bind("<Leave>", encima)
 
-boton_analizar = tk.Button(botones_etiqueta, text="Analizar", command=analizar, **botones_estilos)
+boton_analizar = tk.Button(botones_etiqueta, text="Analizar", command=analizar_global, **botones_estilos)
 boton_analizar.pack(fill=tk.X, pady=5)
 boton_analizar.bind("<Enter>", enter) # para que cargue los efectos aqui y el de abajo xd
 boton_analizar.bind("<Leave>", encima)
@@ -135,4 +154,5 @@ boton_limpiar_salida.bind("<Enter>", enter)  # para que cargue los efectos aqui 
 boton_limpiar_salida.bind("<Leave>", encima)
 
 # Para que se mantenga la interfaz y no se nos cierre de cuentazo
+interfaz = Interfaz(root)
 root.mainloop()
