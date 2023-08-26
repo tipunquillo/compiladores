@@ -6,7 +6,8 @@
 # importamos lo que vimos que nos puede servir
 import tkinter as tk
 from tkinter import scrolledtext, messagebox, filedialog
-from analizador import analizadorLexico # aqui importamos la clase desde analizador_lexico.py
+from analizador import analizadorLexico # aqui importamos la clase desde analizador.py
+from analizador import tokenizador
 
 # variables globales
 archivo_cargado = ""
@@ -50,14 +51,25 @@ class Interfaz:
         tokens, caracteres_invalidos = self.analizador.analizar(contenido)
         self.mostrar_resultados(tokens, caracteres_invalidos)  # Llamar al método dentro de la clase
 
-    def mostrar_resultados(self, tokens, caracteres_invalidos):  # Define el método dentro de la clase
+    def mostrar_resultados(self, tokens, caracteres_invalidos):
         salida_texto.delete("1.0", "end")
-        for token in tokens:
-            tipo, valor = token
-            salida_texto.insert("end", f"{tipo.ljust(25)}{valor}\n")
-        for char in caracteres_invalidos:
-            salida_texto.insert("end", f"CARACTER_INVALIDO".ljust(25) + char + "\n")
 
+        tokens_por_linea = {}  # Diccionario para almacenar tokens por línea
+
+        for token in tokens:
+            num_linea = token.num_linea
+            tipo_valor = f"{token.tipo}: {token.valor} linea {num_linea}"
+            
+            if num_linea in tokens_por_linea:
+                tokens_por_linea[num_linea].append(tipo_valor)
+            else:
+                tokens_por_linea[num_linea] = [f"Línea: {num_linea}", tipo_valor]
+
+        for num_linea, tokens_linea in tokens_por_linea.items():
+            salida_texto.insert("end", "\n".join(tokens_linea) + "\n\n")
+
+        for char, num_linea in caracteres_invalidos:
+            salida_texto.insert("end", f"Línea {num_linea}: CARACTER_INVALIDO".ljust(25) + char + "\n")
 # aqui armamos las funcionalidades
 def limpiar_entrada():
     entrada_texto.delete("1.0", "end")  # borrar lo que haya en la entrada (cuadro)
